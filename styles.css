@@ -1923,3 +1923,24 @@ body{isolation:isolate}
 body>header,body>main,body>footer{position:relative;z-index:1}
 .grid-reveal{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;background-image:linear-gradient(#b5ed8245 1px,transparent 1px),linear-gradient(90deg,#b5ed8245 1px,transparent 1px);background-size:28px 28px;-webkit-mask-image:radial-gradient(circle 230px at var(--grid-x,-500px) var(--grid-y,-500px),#000 0%,#0009 35%,transparent 100%);mask-image:radial-gradient(circle 230px at var(--grid-x,-500px) var(--grid-y,-500px),#000 0%,#0009 35%,transparent 100%);transition:opacity .25s ease}
 @media(prefers-reduced-motion:reduce),(hover:none),(pointer:coarse){.grid-reveal{display:none}}
+
+/* Crisp precision pointer with a brief activation pulse. */
+@media(hover:hover) and (pointer:fine){
+ html,body,a,button,[role="button"]{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2228%22%20height%3D%2232%22%20viewBox%3D%220%200%2028%2032%22%3E%3Cpath%20d%3D%22M4%203v23l6-7%205%2010%204-2-5-10h10Z%22%20fill%3D%22%23b5ed82%22%20stroke%3D%22%23101913%22%20stroke-width%3D%221.5%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22m7%209%209%206h-5l-4%205Z%22%20fill%3D%22%23e2ffc7%22%2F%3E%3C%2Fsvg%3E") 4 3,auto}
+}
+.screw-feedback{position:fixed;width:38px;height:38px;margin:-19px 0 0 -19px;pointer-events:none;z-index:10000;display:grid;place-items:center}
+.screw-feedback::before{content:"";position:absolute;inset:-8px;border:1px solid var(--green);border-radius:50%;animation:screw-ring .6s ease-out forwards}
+.screw-head{width:27px;height:27px;border:2px solid var(--green);border-radius:50%;background:linear-gradient(135deg,#637668,#17231b);box-shadow:0 0 16px #b5ed8260;position:relative;animation:screw-tighten .6s ease-in-out forwards}
+.screw-head::before,.screw-head::after{content:"";position:absolute;top:50%;left:50%;width:15px;height:3px;border-radius:1px;background:#b5ed82;transform:translate(-50%,-50%)}
+.screw-head::after{transform:translate(-50%,-50%) rotate(90deg)}
+@keyframes screw-tighten{0%{transform:rotate(0) scale(1.2)}80%{transform:rotate(300deg) scale(.88);opacity:1}100%{transform:rotate(360deg) scale(.8);opacity:0}}
+@keyframes screw-ring{from{transform:scale(.6);opacity:.8}to{transform:scale(1.5);opacity:0}}
+@media(prefers-reduced-motion:reduce){.screw-feedback{display:none}}
+
+/* Minimal confirmation feedback replaces the tool metaphor. */
+.cursor-halo{width:26px;height:26px;margin:-13px 0 0 -13px;border-color:#b5ed8250;background:transparent;box-shadow:none}
+.screw-feedback::before{inset:0;animation:activation-ring .35s ease-out forwards}
+.screw-head{width:8px;height:8px;border:0;background:var(--green);box-shadow:0 0 12px #b5ed8260;animation:activation-dot .35s ease-out forwards}
+.screw-head::before,.screw-head::after{display:none}
+@keyframes activation-ring{from{transform:scale(.4);opacity:.9}to{transform:scale(1.5);opacity:0}}
+@keyframes activation-dot{from{transform:scale(1);opacity:1}to{transform:scale(.3);opacity:0}}

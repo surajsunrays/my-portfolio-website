@@ -141,6 +141,7 @@ document.addEventListener('pointermove', (event) => {
   gridFrame = requestAnimationFrame(() => {
     gridReveal.style.setProperty('--grid-x', `${gridX}px`);
     gridReveal.style.setProperty('--grid-y', `${gridY}px`);
+
     gridReveal.style.opacity = '1';
     gridFrame = null;
   });
@@ -150,4 +151,36 @@ window.addEventListener('blur', hideGridReveal);
 cursorMedia.addEventListener('change', hideGridReveal);
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) hideGridReveal();
+});
+
+// Delay ordinary mouse link activation briefly; preserve native link behavior.
+let replayingLinkClick = false;
+let fasteningLink = false;
+document.addEventListener('click', (event) => {
+  if (replayingLinkClick || event.defaultPrevented || event.detail === 0 ||
+      event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey ||
+      event.altKey || !cursorMedia.matches) return;
+  const link = event.target.closest('a[href]');
+  if (!link) return;
+  if (fasteningLink) {
+    event.preventDefault();
+    return;
+  }
+  event.preventDefault();
+  fasteningLink = true;
+  const feedback = document.createElement('div');
+  feedback.className = 'screw-feedback';
+  feedback.setAttribute('aria-hidden', 'true');
+  feedback.style.left = `${event.clientX}px`;
+  feedback.style.top = `${event.clientY}px`;
+  const head = document.createElement('span');
+  head.className = 'screw-head';
+  feedback.append(head);
+  document.body.append(feedback);
+  window.setTimeout(() => {
+    feedback.remove();
+    fasteningLink = false;
+    replayingLinkClick = true;
+    try { link.click(); } finally { replayingLinkClick = false; }
+  }, 350);
 });
