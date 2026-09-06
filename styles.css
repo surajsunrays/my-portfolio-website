@@ -81,3 +81,25 @@
 /* Display the PNG illustration without a frame. */
 .approach-visual{border:0;border-radius:0;box-shadow:none;background:transparent}
 .approach-visual figcaption{border-top:0;padding-left:0;padding-right:0}
+
+/* Alternating career entries connected by a central timeline. */
+.timeline{position:relative;border-top:0;padding:8px 0}
+.timeline::before{content:"";position:absolute;top:12px;bottom:25px;left:50%;width:1px;background:#46583e;transform:translateX(-50%)}
+.timeline .job{position:relative;display:block;width:50%;padding:12px 44px 32px 0;border-bottom:0}
+.timeline .job:nth-child(even){margin-left:50%;padding:12px 0 32px 44px}
+.timeline .job::before{content:"";position:absolute;right:-5px;top:18px;width:10px;height:10px;border:2px solid var(--green);border-radius:50%;background:var(--bg);box-sizing:border-box;z-index:1}
+.timeline .job::after{content:"";position:absolute;right:5px;top:22px;width:27px;height:1px;background:#647d54}
+.timeline .job:nth-child(even)::before{right:auto;left:-5px}
+.timeline .job:nth-child(even)::after{right:auto;left:5px}
+.timeline .job:first-child::before{background:var(--green)}
+.timeline .job-date{display:flex;align-items:center;flex-wrap:wrap;gap:10px;line-height:1.7;margin-bottom:17px;padding-top:0;font-size:12px}
+.timeline .current{margin-top:0}
+.timeline .job-content{padding-bottom:24px;border-bottom:1px solid var(--line);min-width:0}
+.timeline .job-content h3{font-size:20px;line-height:1.4}
+.timeline .company{line-height:1.7}
+.timeline .company span{margin-left:0}
+.timeline .job-content p{font-size:14px;line-height:1.85}
+.timeline .impact{gap:10px 18px;line-height:1.7;font-size:12px;margin-top:18px}
+.timeline .impact strong{color:var(--green);font-weight:500}
+@media(max-width:1000px){.timeline .job{padding-right:32px}.timeline .job:nth-child(even){padding-left:32px}.timeline .job::after{width:18px}}
+@media(max-width:720px){.timeline::before{left:6px}.timeline .job,.timeline .job:nth-child(even){width:100%;margin-left:0;padding:10px 0 22px 34px}.timeline .job::before,.timeline .job:nth-child(even)::before{left:1px;right:auto;top:18px}.timeline .job::after,.timeline .job:nth-child(even)::after{left:11px;right:auto;top:22px;width:15px}.timeline .job-date{font-size:12px}.timeline .job-content h3{font-size:19px}}
