@@ -65,3 +65,89 @@ motionPreference.addEventListener("change", (event) => {
     renderCounters(1);
   }
 });
+
+// Decorative mouse halo: never intercepts clicks or replaces focus indicators.
+const cursorMedia = window.matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+const cursorHalo = document.createElement('div');
+cursorHalo.className = 'cursor-halo';
+cursorHalo.setAttribute('aria-hidden', 'true');
+document.body.append(cursorHalo);
+let haloFrame = null;
+let haloX = 0;
+let haloY = 0;
+let pointerX = 0;
+let pointerY = 0;
+let haloVisible = false;
+function hideHalo() {
+  cursorHalo.style.opacity = '0';
+  haloVisible = false;
+  cancelAnimationFrame(haloFrame);
+  haloFrame = null;
+}
+function animateHalo() {
+  haloX += (pointerX - haloX) * 0.28;
+  haloY += (pointerY - haloY) * 0.28;
+  cursorHalo.style.transform = `translate3d(${haloX}px, ${haloY}px, 0)`;
+  if (Math.abs(pointerX - haloX) + Math.abs(pointerY - haloY) > 0.2) {
+    haloFrame = requestAnimationFrame(animateHalo);
+  } else {
+    haloFrame = null;
+  }
+}
+document.addEventListener('pointermove', (event) => {
+  if (!cursorMedia.matches || event.pointerType !== 'mouse') {
+    hideHalo();
+    return;
+  }
+  pointerX = event.clientX;
+  pointerY = event.clientY;
+  if (!haloVisible) {
+    haloX = pointerX;
+    haloY = pointerY;
+    cursorHalo.style.transform = `translate3d(${haloX}px, ${haloY}px, 0)`;
+    cursorHalo.style.opacity = '1';
+    haloVisible = true;
+  }
+  if (haloFrame === null) haloFrame = requestAnimationFrame(animateHalo);
+}, { passive: true });
+document.documentElement.addEventListener('pointerleave', hideHalo);
+window.addEventListener('blur', hideHalo);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) hideHalo();
+});
+cursorMedia.addEventListener('change', hideHalo);
+
+// A stationary background grid revealed by a mouse spotlight.
+const gridReveal = document.createElement('div');
+gridReveal.className = 'grid-reveal';
+gridReveal.setAttribute('aria-hidden', 'true');
+document.body.prepend(gridReveal);
+let gridFrame = null;
+let gridX = 0;
+let gridY = 0;
+function hideGridReveal() {
+  gridReveal.style.opacity = '0';
+  cancelAnimationFrame(gridFrame);
+  gridFrame = null;
+}
+document.addEventListener('pointermove', (event) => {
+  if (!cursorMedia.matches || event.pointerType !== 'mouse') {
+    hideGridReveal();
+    return;
+  }
+  gridX = event.clientX;
+  gridY = event.clientY;
+  if (gridFrame !== null) return;
+  gridFrame = requestAnimationFrame(() => {
+    gridReveal.style.setProperty('--grid-x', `${gridX}px`);
+    gridReveal.style.setProperty('--grid-y', `${gridY}px`);
+    gridReveal.style.opacity = '1';
+    gridFrame = null;
+  });
+}, { passive: true });
+document.documentElement.addEventListener('pointerleave', hideGridReveal);
+window.addEventListener('blur', hideGridReveal);
+cursorMedia.addEventListener('change', hideGridReveal);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) hideGridReveal();
+});

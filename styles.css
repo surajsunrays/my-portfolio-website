@@ -1865,3 +1865,61 @@ footer > a:last-child {
     transform: none;
   }
 }
+
+/* System overview: deployment signals travel through the architecture. */
+@keyframes system-signal{0%{top:0;opacity:0}20%{opacity:1}80%{opacity:1}100%{top:calc(100% - 8px);opacity:0}}
+@keyframes system-pulse{0%,100%{box-shadow:0 0 0 0 #b5ed8200}50%{box-shadow:0 0 0 6px #b5ed8230,0 0 18px #b5ed8280}}
+@keyframes system-stage{0%,75%,100%{border-color:#344038}35%{border-color:var(--green);box-shadow:0 0 16px #b5ed8240}}
+@media(prefers-reduced-motion:no-preference){
+  .architecture .vertical::before{content:"";position:absolute;left:-3px;top:0;width:7px;height:8px;border-radius:3px;background:var(--green);box-shadow:0 0 12px #b5ed82,0 0 20px #b5ed8280;animation:system-signal 1.4s linear infinite}
+  .architecture .pipeline+.vertical::before{animation-delay:.3s}
+  .architecture .pipeline .live-dot{animation:system-pulse 1.2s ease-in-out infinite}
+  .architecture .clouds>div{animation:system-stage 2s ease-in-out infinite}
+  .architecture .clouds>div:nth-child(2){animation-delay:.2s}
+  .architecture .clouds>div:nth-child(3){animation-delay:.4s}
+  .architecture .clouds em i{animation:system-pulse 2s ease-in-out infinite}
+  .architecture .kube{animation:system-stage 2s .6s ease-in-out infinite}
+  .architecture .diagram-bottom .status-dot{animation:system-pulse 2s .8s ease-in-out infinite}
+}
+
+/* Persistent monitoring indicators beneath the deployment flow. */
+.architecture .observability>span{display:inline-flex;align-items:center;gap:6px;color:var(--green)}
+.architecture .observability i{width:6px;height:6px;flex-shrink:0;margin-right:0;background:var(--green);box-shadow:0 0 6px #b5ed8290}
+@keyframes monitoring-heartbeat{0%,100%{box-shadow:0 0 5px #b5ed8290,0 0 0 0 #b5ed8230}50%{box-shadow:0 0 12px #b5ed82,0 0 0 4px #b5ed8225}}
+@media(prefers-reduced-motion:no-preference){
+  .architecture .observability i{animation:monitoring-heartbeat 1.6s ease-in-out infinite}
+  .architecture .observability>span:nth-child(2) i{animation-delay:-1.05s}
+  .architecture .observability>span:nth-child(3) i{animation-delay:-.5s}
+}
+
+/* Expand Google Cloud learning tiles on mouse hover. */
+@media(hover:hover) and (pointer:fine){
+  .google-badge-grid .google-badge:hover{position:relative;z-index:1;transform:scale(1.05)}
+}
+@media(prefers-reduced-motion:reduce){
+  .google-badge-grid .google-badge:hover{transform:none}
+}
+
+/* Expand the entire final contact panel on mouse hover. */
+.contact-panel{transition:transform .25s ease}
+@media(hover:hover) and (pointer:fine){
+  .contact-panel:hover{transform:scale(1.10);z-index:1}
+}
+@media(prefers-reduced-motion:reduce){
+  .contact-panel{transition:none}
+  .contact-panel:hover{transform:none}
+}
+
+/* Green pointer and a soft movement halo for mouse input. */
+@media(hover:hover) and (pointer:fine){
+  html,body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='28' viewBox='0 0 24 28'%3E%3Cpath d='M3 2v21l5-6 4 9 4-2-4-8h8Z' fill='%23b5ed82' stroke='%23101913' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 3 2,auto}
+  a,button,[role="button"]{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='28' viewBox='0 0 24 28'%3E%3Cpath d='M3 2v21l5-6 4 9 4-2-4-8h8Z' fill='%23d5ffaf' stroke='%23101913' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") 3 2,pointer}
+}
+.cursor-halo{position:fixed;left:0;top:0;width:32px;height:32px;margin:-16px 0 0 -16px;border:1px solid #b5ed8270;border-radius:50%;background:#b5ed820b;box-shadow:0 0 18px #b5ed8218;pointer-events:none;z-index:9999;opacity:0;transition:opacity .15s ease;will-change:transform}
+@media(prefers-reduced-motion:reduce),(hover:none),(pointer:coarse){.cursor-halo{display:none}}
+
+/* Reference-inspired background grid, visible only near the mouse. */
+body{isolation:isolate}
+body>header,body>main,body>footer{position:relative;z-index:1}
+.grid-reveal{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;background-image:linear-gradient(#b5ed8245 1px,transparent 1px),linear-gradient(90deg,#b5ed8245 1px,transparent 1px);background-size:28px 28px;-webkit-mask-image:radial-gradient(circle 230px at var(--grid-x,-500px) var(--grid-y,-500px),#000 0%,#0009 35%,transparent 100%);mask-image:radial-gradient(circle 230px at var(--grid-x,-500px) var(--grid-y,-500px),#000 0%,#0009 35%,transparent 100%);transition:opacity .25s ease}
+@media(prefers-reduced-motion:reduce),(hover:none),(pointer:coarse){.grid-reveal{display:none}}
